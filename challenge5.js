@@ -47,24 +47,31 @@ io.on('connection', function(socket) {
       const botAction = response.result.action
       console.log(botAction)
 
-      socket.emit('cannon.action', botAction)
+      socket.emit('cannon.action ', botAction)
 
       if (botAction === 'cannon.fire') {
         cannon.fireCannon()
-      } else if (botAction === 'cannon.raise') {
+      } else if (botAction === 'cannon.rise') {
+        /*
         const currentPos = cannon.getCurrentPosition()
         let sendPosition = 90
         if (currentPos <= 75) {
           sendPosition = currentPos + 15
         }
+        
         cannon.setCannon(currentPos + 15)
+        */
+        cannon.setCannon(70)
       } else if (botAction === 'cannon.lower') {
+        /*
         const currentPos = cannon.getCurrentPosition()
         let sendPosition = 0
         if (currentPos >= 15) {
           sendPosition = currentPos - 15
         }
         cannon.setCannon(sendPosition)
+        */
+        cannon.setCannon(40)
       }
 
       const aiText = response.result.fulfillment.speech
