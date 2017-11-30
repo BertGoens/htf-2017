@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="Simple AI Chat Bot Demo with Web Speech API">
+  <meta name="author" content="Tomomi Imura  @girlie_mac">
+  <meta name="author" content="Bert Goens">
+
+  <title>🅱️𝔼ℝ𝕋 ﹣ 𝔽𝕃𝟘ℝ𝕀𝕊</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <section>
+    <h1>🅱️𝔼ℝ𝕋 ﹣ 𝔽𝕃𝟘ℝ𝕀𝕊</h1>
+
+    <button id="record">
+      <i class="fa fa-microphone"></i>
+    </button>
+
+    <div>
+      <h3>Input</h3>
+      <label for="teletype">You type:</label>
+      <input id="input-text" type="text" name="teletype" style="min-width:400px">
+      <button id="send-text">Send</button>
+      <p>You said:
+        <em class="output-you">...</em>
+      </p>
+      <p>Confidence:
+        <span id="output-confidence">...</span>
+      </p>
+      <hr />
+      <p>Bot status:
+        <em id="ouput-status" class="output-bot">...</em>
+      </p>
+      <hr />
+      <h3>Output</h3>
+      <p>Bot replied:
+        <em id="output-reply" class="output-bot">...</em>
+      </p>
+      <label for="output-mute">Mute</label>
+      <input id="output-mute" name="output-mute" type="checkbox">
+    </div>
+  </section>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

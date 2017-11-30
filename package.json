@@ -10,8 +10,11 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "apiai": "^4.0.3",
     "cognitive-services": "^0.6.0",
+    "express": "^4.16.2",
     "glob": "^7.1.2",
-    "particle-api-js": "^7.0.1"
+    "particle-api-js": "^7.0.1",
+    "socket.io": "^2.0.4"
   }
 }
