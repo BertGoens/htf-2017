@@ -4,6 +4,7 @@ const config = require('./config')
 
 const express = require('express')
 const app = express()
+const cannon = require('./challenge3')
 
 app.use(express.static(__dirname + '/views')) // html
 app.use(express.static(__dirname + '/public')) // js, css, images
@@ -44,7 +45,29 @@ io.on('connection', function(socket) {
 
     apiaiReq.on('response', response => {
       const botAction = response.result.action
-      let aiText = response.result.fulfillment.speech
+      console.log(botAction)
+
+      socket.emit('cannon.action', botAction)
+
+      if (botAction === 'cannon.fire') {
+        cannon.fireCannon()
+      } else if (botAction === 'cannon.raise') {
+        const currentPos = cannon.getCurrentPosition()
+        let sendPosition = 90
+        if (currentPos <= 75) {
+          sendPosition = currentPos + 15
+        }
+        cannon.setCannon(currentPos + 15)
+      } else if (botAction === 'cannon.lower') {
+        const currentPos = cannon.getCurrentPosition()
+        let sendPosition = 0
+        if (currentPos >= 15) {
+          sendPosition = currentPos - 15
+        }
+        cannon.setCannon(sendPosition)
+      }
+
+      const aiText = response.result.fulfillment.speech
 
       console.log('Bot reply: ' + aiText)
       socket.emit('bot reply', aiText)
