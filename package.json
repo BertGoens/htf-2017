@@ -8,5 +8,8 @@
   },
   "author": "",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "cognitive-services": "^0.6.0"
+  }
 }
