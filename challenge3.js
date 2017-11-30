@@ -51,7 +51,7 @@ particle.login({username: 'aagje.reynders@craftworkz.be', password: 'htf123'}).t
                 console.log('An error occurred:', err);
             });*/
         getCurrentPosition();
-        setCannon(70);
+        setCannon(40);
 
     },
     function (err) {
@@ -59,9 +59,8 @@ particle.login({username: 'aagje.reynders@craftworkz.be', password: 'htf123'}).t
     }
 );
 
-/*setTimeout(function(){ console.log(token) }, 1000);
-console.log(token);*/
-function setCannon(position){
+
+/*function setCannon(position){
     if (position < 40 || position > 90){
         console.log('These are not optimal shooting angles, choose something between 40 and 90 degrees.')
     }
@@ -100,7 +99,7 @@ function setCannon(position){
         console.log('An error occurred while getting attrs:', err);
     })}
 
-}
+}*/
 
 function getCurrentPosition(){
     particle.getVariable({ deviceId: '270023000847343337373738', name: 'pos', auth: token }).then(function(data) {
@@ -108,4 +107,66 @@ function getCurrentPosition(){
     }, function(err) {
         console.log('An error occurred while getting attrs:', err);
     });
+}
+
+
+function setCannon(position){
+    if (position < 40 || position > 90){
+        console.log('These are not optimal shooting angles, choose something between 40 and 90 degrees.')
+    }
+    else{
+        particle.getVariable({ deviceId: '270023000847343337373738', name: 'pos', auth: token }).then(function(data) {
+            currentPos = data.body.result;
+            if (position > currentPos){
+                for(currentPos; currentPos < position; currentPos+=5){
+                    if (currentPos > position) { currentPos = position}
+                    setTimeout(function(){
+                        fnPr = particle.callFunction({ deviceId: '270023000847343337373738', name: 'setPosition', argument: ''+currentPos, auth: token });
+                        fnPr.then(
+                            function(data) {
+                                console.log('Function called succesfully:', data);
+                            }, function(err) {
+                                console.log('An error occurred:', err);
+                            });
+                    }, 1000);
+                }
+                setTimeout(function(){
+                    fnPr = particle.callFunction({ deviceId: '270023000847343337373738', name: 'setPosition', argument: ''+position, auth: token });
+                    fnPr.then(
+                        function(data) {
+                            console.log('Function called succesfully:', data);
+                        }, function(err) {
+                            console.log('An error occurred:', err);
+                        });
+                }, 1000);
+            }
+            else if (position < currentPos){
+                for(currentPos; currentPos > position; currentPos-=5){
+                    if (currentPos < position) { currentPos = position}
+                    setTimeout(function(){
+                        fnPr = particle.callFunction({ deviceId: '270023000847343337373738', name: 'setPosition', argument: ''+currentPos, auth: token });
+                        fnPr.then(
+                            function(data) {
+                                console.log('Function called succesfully:', data);
+                            }, function(err) {
+                                console.log('An error occurred:', err);
+                            });
+                    }, 1000);
+                }
+                setTimeout(function(){
+                    fnPr = particle.callFunction({ deviceId: '270023000847343337373738', name: 'setPosition', argument: ''+position, auth: token });
+                    fnPr.then(
+                        function(data) {
+                            console.log('Function called succesfully:', data);
+                        }, function(err) {
+                            console.log('An error occurred:', err);
+                        });
+                }, 1000);
+            }
+            else if (position === currentPos){ console.log('The cannon is already at this position.')}
+
+        }, function(err) {
+            console.log('An error occurred while getting attrs:', err);
+        })}
+
 }
