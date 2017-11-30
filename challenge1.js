@@ -1,6 +1,41 @@
 const cognitive = require('cognitive-services')
 const config = require('./config')
-const fs = require('fs');
+const glob = require('glob')
+const { join } = require('path')
+const { lstatSync, readdirSync, writeFile } = require('fs')
+
+let pretenders
+
+const faceDir = join(__dirname, 'pretenders')
+// options is optional
+
+const isDirectory = source => lstatSync(source).isDirectory()
+const getDirectories = source =>
+  readdirSync(source)
+    .map(name => join(source, name))
+    .filter(isDirectory)
+pretenders = getDirectories(faceDir)
+
+var result = {}
+for (let i = 0; i < pretenders.length; i++) {
+  const folderPath = pretenders[i]
+  const name = folderPath.substr(folderPath.lastIndexOf('/') + 1)
+  result[name] = {}
+  result[name].path = folderPath
+}
+
+for (let i = 0; i < pretenders.length; i++) {
+  const element = pretenders[i]
+  const name = element.substr(element.lastIndexOf('/') + 1)
+
+  result[name].files = glob.sync(element + '/**/*.*')
+}
+
+writeFile(__dirname + '/test.json', JSON.stringify(result), function(err) {
+  if (err) {
+    return console.log(err)
+  }
+})
 
 const face = new cognitive.face({
   apiKey: config.ms.key,
@@ -10,50 +45,50 @@ const face = new cognitive.face({
 // Create a person group
 // for every group
 
-if (process.argv.length <= 2) {
-   console.log("Usage: " + __filename + " path/to/directory");
-   process.exit(-1);
-}
+function createGroup({ group }) {
+  const groupId = group
 
-var path = process.argv[2];
+  const parameters = {
+    personGroupId: groupId,
+  }
+  const headers = {
+    'Content-type': 'application/json',
+  }
+  const body = {
+    name: 'minister imposters: ' + groupId,
+  }
 
-fs.readdir(path, function(err, items) {
-   console.log(items);
+  face
+    .createAPersonGroup({
+      parameters,
+      headers,
+      body,
+    })
+    .then(response => {
+      console.log('created groupid ' + groupId)
 
-   for (var i=0; i<items.length; i++) {
-       console.log(items[i]);
-   }
-});
+      // create a person
+      headers = {
+        'Content-type': 'application/json',
+      }
+      body = {
+        name: 'johndoe',
+      }
+      parameters = {
+        personGroupId: personGroupId,
+      }
 
-function createGroup({ location }) {
-    const groupId = 'minister' + index
-
-    const parameters = {
-      personGroupId: groupId,
-    }
-    const headers = {
-      'Content-type': 'application/json',
-    }
-    const body = {
-      name: 'minister imposters: ' + groupId,
-    }
-
-    face
-      .createAPersonGroup({
+      return face.createAPerson({
         parameters,
         headers,
         body,
       })
-      .then(response => {
-        console.log('created groupid ' + groupId)
-        console.log(response)
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }
+    })
+    .catch(err => {
+      console.error(err)
+    })
 }
 
-function populateGroup() {}
+//function populateGroup() {}
 
-createGroup()
+createGroup(result['minister1'])
