@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "cognitive-services": "^0.6.0",
-    "glob": "^7.1.2"
+    "glob": "^7.1.2",
+    "particle-api-js": "^7.0.1"
   }
 }
